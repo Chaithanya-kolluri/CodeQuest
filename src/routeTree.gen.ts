@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as ChallengesIndexRouteImport } from './routes/challenges/index'
 import { Route as ChallengesSlugRouteImport } from './routes/challenges/$slug'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChallengesIndexRoute = ChallengesIndexRouteImport.update({
@@ -38,12 +44,14 @@ const ChallengesSlugRoute = ChallengesSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/challenges/': typeof ChallengesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/challenges': typeof ChallengesIndexRoute
 }
@@ -51,20 +59,29 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/challenges/': typeof ChallengesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/challenges/$slug' | '/challenges/'
+  fullPaths:
+    '/' | '/auth' | '/leaderboard' | '/challenges/$slug' | '/challenges/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/challenges/$slug' | '/challenges'
-  id: '__root__' | '/' | '/auth' | '/challenges/$slug' | '/challenges/'
+  to: '/' | '/auth' | '/leaderboard' | '/challenges/$slug' | '/challenges'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/leaderboard'
+    | '/challenges/$slug'
+    | '/challenges/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  LeaderboardRoute: typeof LeaderboardRoute
   ChallengesSlugRoute: typeof ChallengesSlugRoute
   ChallengesIndexRoute: typeof ChallengesIndexRoute
 }
@@ -83,6 +100,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/challenges/': {
@@ -105,6 +129,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  LeaderboardRoute: LeaderboardRoute,
   ChallengesSlugRoute: ChallengesSlugRoute,
   ChallengesIndexRoute: ChallengesIndexRoute,
 }
