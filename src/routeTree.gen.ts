@@ -10,14 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ChallengesIndexRouteImport } from './routes/challenges/index'
 import { Route as ChallengesSlugRouteImport } from './routes/challenges/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -29,6 +35,11 @@ const LeaderboardRoute = LeaderboardRouteImport.update({
   id: '/leaderboard',
   path: '/leaderboard',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const ChallengesIndexRoute = ChallengesIndexRouteImport.update({
   id: '/challenges/',
@@ -45,6 +56,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/leaderboard': typeof LeaderboardRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/challenges/': typeof ChallengesIndexRoute
 }
@@ -52,34 +64,51 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/leaderboard': typeof LeaderboardRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/challenges': typeof ChallengesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/leaderboard': typeof LeaderboardRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/challenges/$slug': typeof ChallengesSlugRoute
   '/challenges/': typeof ChallengesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/leaderboard' | '/challenges/$slug' | '/challenges/'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/leaderboard' | '/challenges/$slug' | '/challenges'
-  id:
-    | '__root__'
     | '/'
     | '/auth'
     | '/leaderboard'
+    | '/dashboard'
+    | '/challenges/$slug'
+    | '/challenges/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/auth'
+    | '/leaderboard'
+    | '/dashboard'
+    | '/challenges/$slug'
+    | '/challenges'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/leaderboard'
+    | '/_authenticated/dashboard'
     | '/challenges/$slug'
     | '/challenges/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   LeaderboardRoute: typeof LeaderboardRoute
   ChallengesSlugRoute: typeof ChallengesSlugRoute
@@ -95,6 +124,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -108,6 +144,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/leaderboard'
       preLoaderRoute: typeof LeaderboardRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/challenges/': {
       id: '/challenges/'
@@ -126,8 +169,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   LeaderboardRoute: LeaderboardRoute,
   ChallengesSlugRoute: ChallengesSlugRoute,
