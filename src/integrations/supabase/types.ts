@@ -14,7 +14,122 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      challenges: {
+        Row: {
+          created_at: string
+          difficulty: string
+          id: string
+          order_index: number
+          prompt: string
+          slug: string
+          starter_js: string
+          starter_py: string
+          tests: Json
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          created_at?: string
+          difficulty?: string
+          id?: string
+          order_index?: number
+          prompt: string
+          slug: string
+          starter_js: string
+          starter_py: string
+          tests: Json
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          created_at?: string
+          difficulty?: string
+          id?: string
+          order_index?: number
+          prompt?: string
+          slug?: string
+          starter_js?: string
+          starter_py?: string
+          tests?: Json
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          current_streak: number
+          id: string
+          last_solved_on: string | null
+          longest_streak: number
+          updated_at: string
+          username: string
+          xp: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          current_streak?: number
+          id: string
+          last_solved_on?: string | null
+          longest_streak?: number
+          updated_at?: string
+          username: string
+          xp?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_solved_on?: string | null
+          longest_streak?: number
+          updated_at?: string
+          username?: string
+          xp?: number
+        }
+        Relationships: []
+      }
+      submissions: {
+        Row: {
+          challenge_id: string
+          code: string
+          created_at: string
+          id: string
+          language: string
+          passed: boolean
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          code: string
+          created_at?: string
+          id?: string
+          language?: string
+          passed?: boolean
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          code?: string
+          created_at?: string
+          id?: string
+          language?: string
+          passed?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
