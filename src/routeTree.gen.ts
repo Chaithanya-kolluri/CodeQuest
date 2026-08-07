@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ChallengesIndexRouteImport } from './routes/challenges/index'
+import { Route as ChallengesSlugRouteImport } from './routes/challenges/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,34 +29,43 @@ const ChallengesIndexRoute = ChallengesIndexRouteImport.update({
   path: '/challenges/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChallengesSlugRoute = ChallengesSlugRouteImport.update({
+  id: '/challenges/$slug',
+  path: '/challenges/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/challenges/$slug': typeof ChallengesSlugRoute
   '/challenges/': typeof ChallengesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/challenges/$slug': typeof ChallengesSlugRoute
   '/challenges': typeof ChallengesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/challenges/$slug': typeof ChallengesSlugRoute
   '/challenges/': typeof ChallengesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/challenges/'
+  fullPaths: '/' | '/auth' | '/challenges/$slug' | '/challenges/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/challenges'
-  id: '__root__' | '/' | '/auth' | '/challenges/'
+  to: '/' | '/auth' | '/challenges/$slug' | '/challenges'
+  id: '__root__' | '/' | '/auth' | '/challenges/$slug' | '/challenges/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  ChallengesSlugRoute: typeof ChallengesSlugRoute
   ChallengesIndexRoute: typeof ChallengesIndexRoute
 }
 
@@ -82,12 +92,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChallengesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/challenges/$slug': {
+      id: '/challenges/$slug'
+      path: '/challenges/$slug'
+      fullPath: '/challenges/$slug'
+      preLoaderRoute: typeof ChallengesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  ChallengesSlugRoute: ChallengesSlugRoute,
   ChallengesIndexRoute: ChallengesIndexRoute,
 }
 export const routeTree = rootRouteImport
