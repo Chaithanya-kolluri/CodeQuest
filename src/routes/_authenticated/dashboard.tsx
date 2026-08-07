@@ -85,8 +85,8 @@ function DashboardPage() {
           />
           <StatCard
             icon={<CheckCircle2 className="size-4 text-success" />}
-            label="Challenges solved"
-            value={profile?.solved_count ?? 0}
+            label="Longest streak"
+            value={`${profile?.longest_streak ?? 0} days`}
           />
         </div>
 
