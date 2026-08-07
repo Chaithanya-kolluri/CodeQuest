@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.award_xp_on_pass() FROM PUBLIC, anon, authenticated;
